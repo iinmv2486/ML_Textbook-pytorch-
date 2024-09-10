@@ -40,7 +40,32 @@ class Perceptron:
         
         반환값
         ----------
-        slef : object
+        self : object
 
         """
-        rgen = np
+        rgen = np.random.RandomState(self.random_state)
+        self.w_ = rgen.normal(loc=0.0, scale=0.01, size=X.shape[1])
+        self.b_ = np.float_(0.)
+        self.errors_ = []
+
+        for _ in range(self.n_iter):
+            errors = 0
+            for xi, target in zip(X, y):
+                update = self.eta * (target - self.predict(xi))
+                self.w_ += update * xi
+                self.b_ += update
+                errors += int(update != 0.0)
+            self.errors_.append(errors)
+        return self
+    
+    def net_input(self, X):
+        """입력 계산"""
+        return np.dot(X, self.w_) + self.b_
+    
+    def predict(self, X):
+        """단위 계단 함수를 사용하여 클래스 레이블을 반환한다."""
+        return np.where(self.net_input(X) >= 0.0, 1.0)
+
+if __name__ == "__main__":
+    a = -1.0
+    print(bool(a != 0.0))
